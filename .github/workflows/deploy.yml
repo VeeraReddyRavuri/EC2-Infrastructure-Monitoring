@@ -16,7 +16,9 @@ jobs:
         uses: appleboy/ssh-action@v0.1.9
         with:
           host: ${{ secrets.EC2_PUBLIC_IP }}
-          username: ec2-user
+          username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "monitoring.py"
-          target: "/home/ubuntu/EC2-Monitoring/"
+          script: |
+            mkdir -p /home/ubuntu/EC2-Monitoring
+            echo "${{ github.workspace }}/monitoring.py"
+            scp -i ~/.ssh/id_rsa monitoring.py ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/EC2-Monitoring/
